@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from markdown import markdown
 from random import randint
+from requests import request
 from . import util
 import encyclopedia
 
@@ -29,3 +30,15 @@ def search(request):
 def random(request):
     list=util.list_entries()
     return redirect("entry",list[randint(0,len(list)-1)])
+
+def new(request):
+    if request.method == "POST":
+        title=request.POST.get("title")
+        content=request.POST.get("content")
+        if title == "" or content == "":
+            return render(request, "encyclopedia/new.html", {"message": "Invalid input. Fields cannot be left empty!"})
+        if title in util.list_entries():
+            return render(request,"encyclopedia/new.html",{"message":"Error: A page with the same title already exists!", "title":title, "content":content})
+        util.save_entry(title,content)
+        return redirect("entry",title=title)
+    return render(request,"encyclopedia/new.html")

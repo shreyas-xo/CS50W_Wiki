@@ -1,0 +1,30 @@
+{%extends "encyclopedia/layout.html"%}
+{% block title %}
+    Create a New Page
+{% endblock %}
+<br>
+{% block body %}
+<h1>Create a New Page</h1>
+{%if message%}
+<div class="alert alert-danger" role="alert">
+{{message}}
+</div>
+{%endif%}
+
+<form method="POST">
+    {%csrf_token%}
+    <div class="form-outline mb-4">
+        <label class="form-label" for="title">Title:</label>
+        <input type="text" name="title" id="title" class="form-control" placeholder="Enter title of the page here..."{%if title%} value="{{title}}"{%endif%}/>
+        
+    </div>
+    
+      
+    <div class="form-outline mb-4">
+        <label class="form-label" for="content">Content:</label>
+        <textarea class="form-control" name="content" id="content" rows="10" placeholder="Enter content of the page in markdown here..."{%if content%} value="{{content}}"{%endif%}></textarea>
+
+    </div>
+    <button type="submit" value="Save" class="btn btn-primary my-3">Save Entry</button>
+</form>
+{% endblock %}
