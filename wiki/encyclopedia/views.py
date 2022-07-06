@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from markdown import markdown
 from random import randint
 from requests import request
+from responses import POST
 from . import util
 import encyclopedia
 
@@ -42,3 +43,13 @@ def new(request):
         util.save_entry(title,content)
         return redirect("entry",title=title)
     return render(request,"encyclopedia/new.html")
+
+def edit(request,title):
+    content = util.get_entry(title.strip())
+    if request.method == "POST":
+        content = request.POST.get("content").strip()
+        if content == "":    
+            return render(request, "encyclopedia/edit.html", {"message": "Invalid input. Fields cannot be left empty!"})
+        util.save_entry(title,content)
+        return redirect("entry", title=title)
+    return render(request, "encyclopedia/edit.html", {'content': content, 'title': title})
